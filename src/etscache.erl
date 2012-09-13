@@ -37,7 +37,7 @@
 -export([new/1, put_new/3, update/3, get/2, test/0]).
 
 -type key() :: binary().
--type value() :: binary().
+-type value() :: term().
 
 
 %% Container for the cache
@@ -76,8 +76,7 @@ new(Maxsize) ->
 	
 
 %% Insert NEW data in cache 
-put_new(_Cache=#cache{maxsize=Msize, table=Tab,itable=ITab}, Key, Value) ->
-	Bin = list_to_binary(Value),
+put_new(_Cache=#cache{maxsize=Msize, table=Tab,itable=ITab}, Key, Bin) ->
 	[{_,?CACHE_SIZE, CurrentSize}] = ets:lookup(Tab, ?CACHE_SIZE),
 	%%io:format("Current size ~p~n", [CurrentSize]),
 
@@ -118,8 +117,7 @@ put_new(_Cache=#cache{maxsize=Msize, table=Tab,itable=ITab}, Key, Value) ->
 
 
 %% insert (probably not new) data
-update(_Cache=#cache{table=Tab, itable=ITab}, Key, Value) ->
-	Bin = list_to_binary(Value),
+update(_Cache=#cache{table=Tab, itable=ITab}, Key, Bin) ->
 	Time = timestamp(),
 	%% insert data in primary table
 	ets:insert(Tab, #r_table{key = Key, ts = Time, value = Bin}),
@@ -135,8 +133,7 @@ update(_Cache=#cache{table=Tab, itable=ITab}, Key, Value) ->
 get(#cache{table=Tab}, Key) ->
 	case ets:lookup(Tab, Key) of
 		[Rtable] ->
-			Value = binary_to_list(Rtable#r_table.value),
-			%%io:format("We found it, key= ~p value=~p~n", [Key,Value]),
+			Value =Rtable#r_table.value,
 			{ok, Value};
 		[] ->
 			%%io:format("No person with ID = ~p~n", [Key]),
