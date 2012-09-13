@@ -68,8 +68,8 @@
 
 %% Create a new cache with a mixumim size
 new(Maxsize) -> 
-	Table = ets:new(table, [set,private,{keypos,2}]),
-	ITable = ets:new(itable, [ordered_set,private,{keypos,2}]),
+	Table = ets:new(table, [set,public,{keypos,2}]),
+	ITable = ets:new(itable, [ordered_set,public,{keypos,2}]),
 	ets:insert(Table, {dummy, ?CACHE_SIZE, 0}),
 	#cache{maxsize = Maxsize, table=Table, itable=ITable}.
 	
