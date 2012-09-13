@@ -1,0 +1,10 @@
+%% -*- erlang -*-
+
+{application, 'etscache',
+ [
+  {vsn, git},
+  {description, "simple cache using ETS"},
+  {applications, [kernel, stdlib, edoc]},
+  {registered, []},
+  {env, []}
+ ]}.
